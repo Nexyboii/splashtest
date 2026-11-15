@@ -92,6 +92,11 @@ export const pricesProposed = {
   // from $250. Preview uses $380 (the customer-facing card) — FLAGGED for
   // Rahul to confirm. Hand wax: $35 standalone, $30 with any wash
   // (reconciles the $30 promo and the $35 add-on list).
+  // NOTE: these scalar fields must exist — App.jsx renders them directly;
+  // a missing field prints "$undefined" on the live site (seen 2026-11-15).
+  handWax: 35,
+  handWaxWithWash: 30,
+  machinePolishingFrom: 380,
   extras: [
     { name: "Machine polishing", price: "from $380", note: "Price to confirm — Major Detail page says from $250." },
     { name: "Hand wax", price: "$35", note: "$30 with any wash." },
@@ -151,6 +156,7 @@ export const washStages = [
   { title: "Drive in", text: "Your car rolls into the Splash workshop — no booking needed for a wash." },
   { title: "Pressure wash", text: "Pressure washed with purified water, softened by our Himalayan salt purification process." },
   { title: "Foam & hand wash", text: "Foam shampoo and a microfibre mitt — no brushes, no rollers, no brooms." },
+  { title: "Interior, detailed", text: "Doors open, seats vacuumed, dash and trims wiped — the inside gets the same care." },
   { title: "Pure-water rinse", text: "A pure-water rinse lifts the last of the grime and leaves no spots behind." },
   { title: "Blow-dry tunnel", text: "Through the blow-dry tunnel — touch-free drying, gentle on paint." },
   { title: "Gleaming", text: "Drive away gleaming — that's the Splash difference." },

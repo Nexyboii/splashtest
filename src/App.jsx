@@ -18,7 +18,7 @@ function Reveal({ children, className = "", id }) {
     io.observe(el);
     return () => io.disconnect();
   }, []);
-  return <div ref={ref} className={`reveal ${className}`} id={id}>{children}</div>;
+  return <section ref={ref} className={`reveal ${className}`} id={id}>{children}</section>;
 }
 
 // Service popup — smooth open, steps animate in one by one along a rail.
@@ -155,7 +155,7 @@ export default function App() {
       </div>
 
       <main>
-        <section className="wrap reveal" id="how">
+        <Reveal className="wrap" id="how">
           <p className="label">How it works</p>
           <h2>Simple. No booking. No fuss.</h2>
           <div className="how-grid">
@@ -177,9 +177,9 @@ export default function App() {
             <div><strong>Spot-free rinse</strong><span>Pure-water rinse, no spots left behind</span></div>
           </div>
           <p className="promise">“No brushes. No rollers. No brooms. No scratches.”</p>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="services">
+        <Reveal className="wrap" id="services">
           <p className="label">Services &amp; prices</p>
           <h2>One honest price list.</h2>
           <p className="lede">One price does it all — no hidden extras. Prices are by vehicle size; tap any service to see exactly what it includes.</p>
@@ -224,9 +224,9 @@ export default function App() {
               <p>Give a Splash gift card — the perfect present. Call us to arrange one.</p>
             </div>
           </div>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="major-detail">
+        <Reveal className="wrap" id="major-detail">
           <div className="callout anim">
             <div>
               <p className="label">Major Detail</p>
@@ -239,9 +239,9 @@ export default function App() {
             </div>
             <img src={`/photos/${photos.gallery[2]}`} alt="McLaren with its doors open in front of the Splash workshop" loading="lazy" />
           </div>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="protection">
+        <Reveal className="wrap" id="protection">
           <p className="label">Paint protection</p>
           <h2>New Car Treatment — Gtechniq Crystal Serum</h2>
           <div className="dark-card anim">
@@ -260,9 +260,9 @@ export default function App() {
             </div>
             <img src={`/photos/${photos.gallery[17]}`} alt="Gtechniq Crystal Serum being applied to a car bonnet" loading="lazy" />
           </div>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="gallery">
+        <Reveal className="wrap" id="gallery">
           <p className="label">Our work</p>
           <h2>Real cars. Real results.</h2>
           <div className="gallery">
@@ -272,9 +272,9 @@ export default function App() {
               </figure>
             ))}
           </div>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="reviews">
+        <Reveal className="wrap" id="reviews">
           <p className="label">Reviews</p>
           <h2>Loved by Adelaide drivers</h2>
           <p className="stars" aria-label={`Rated ${reviews.rating} out of 5 stars`}><span className="big-stars">★★★★</span><span className="big-stars dim">★</span> <strong>{reviews.rating}★</strong> from {reviews.count}</p>
@@ -287,9 +287,9 @@ export default function App() {
             ))}
           </div>
           <p><a href={reviews.allUrl} target="_blank" rel="noreferrer">Read all reviews →</a></p>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="gift">
+        <Reveal className="wrap" id="gift">
           <div className="gold-card anim">
             <div>
               <h2>A gift that gleams.</h2>
@@ -297,9 +297,9 @@ export default function App() {
               <a className="call-btn" href={site.phoneHref}>Call to arrange a gift card</a>
             </div>
           </div>
-        </section>
+        </Reveal>
 
-        <section className="wrap reveal" id="visit">
+        <Reveal className="wrap" id="visit">
           <p className="label">Visit us</p>
           <h2>Come and see us.</h2>
           <div className="visit-grid">
@@ -315,7 +315,7 @@ export default function App() {
               <p className="fineprint">Est. 2001 — South Australia&apos;s home of hand car washing and detailing.</p>
             </div>
           </div>
-        </section>
+        </Reveal>
       </main>
 
       <footer>
