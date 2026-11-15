@@ -3,8 +3,8 @@
 // only; no invented inclusions, reviews, warranty years, or booking links.
 // Motion pass 2026-11-15: logo, floating-bubble hero, staggered entrances,
 // marquee, hover-lift cards, shine-sweep call buttons.
-import React, { useEffect, useState } from "react";
-import { site, booking, pricesProposed, paintProtection, reviews, photos } from "./config.js";
+import React, { useEffect, useRef, useState } from "react";
+import { site, booking, pricesProposed, paintProtection, reviews, photos, journey } from "./config.js";
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Splash+Car+Wash+%26+Detailing%2C+395+Glen+Osmond+Rd%2C+Glen+Osmond+SA+5064";
@@ -30,8 +30,130 @@ function Bubbles() {
   );
 }
 
+// Service popup — smooth open, steps animate in one by one along a rail.
+function ServiceModal({ content, closing, onClose }) {
+  const closeRef = useRef(null);
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    if (closeRef.current) closeRef.current.focus();
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [onClose]);
+  return (
+    <div className={`modal-backdrop${closing ? " closing" : ""}`} onClick={onClose}>
+      <div className="modal-panel" role="dialog" aria-modal="true" aria-label={content.title} onClick={(e) => e.stopPropagation()}>
+        <button ref={closeRef} type="button" className="modal-close" onClick={onClose} aria-label="Close">×</button>
+        <p className="label">{content.eyebrow}</p>
+        <h2>{content.title}</h2>
+        <p className="lede">{content.desc}</p>
+        {content.chips && (
+          <ul className="chips modal-chips">
+            {content.chips.map((c) => <li key={c}>{c}</li>)}
+          </ul>
+        )}
+        {content.steps ? (
+          <ol className="modal-steps">
+            {content.steps.map((s, i) => (
+              <li key={s.title} className="mstep" style={{ "--d": `${0.18 + i * 0.09}s` }}>
+                <span className="mstep-num">{String(i + 1).padStart(2, "0")}</span>
+                <div><strong>{s.title}</strong>{s.text ? <span>{s.text}</span> : null}</div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="modal-note">{content.note}</p>
+        )}
+        {content.steps && content.note ? <p className="modal-note">{content.note}</p> : null}
+        <div className="modal-foot">
+          <p className="modal-price">{content.priceLine}</p>
+          <a className="call-btn" href={site.phoneHref}>Call {site.phoneDisplay}</a>
+        </div>
+        <p className="fineprint">{content.book === "walk-in" ? "Or just drive in during opening hours — no booking needed." : "Please call to book — we allow the right time for your car."}</p>
+      </div>
+    </div>
+  );
+}
+
+// Scroll journey — pinned photo crossfades through the wash stages as
+// the customer scrolls. Falls back to a plain stacked list under
+// prefers-reduced-motion (see CSS).
+function Journey() {
+  const ref = useRef(null);
+  const [stage, setStage] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      const total = r.height - window.innerHeight;
+      const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
+      setStage(Math.min(journey.length - 1, Math.floor(p * journey.length)));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
+  }, []);
+  return (
+    <section className="journey" ref={ref} style={{ height: `${journey.length * 90}vh` }} aria-label="The Splash wash journey — from dusty to dazzling">
+      <div className="journey-pin">
+        {journey.map((s, i) => (
+          <figure key={s.photo} className={`journey-stage${i === stage ? " active" : ""}`}>
+            <img src={`/photos/${s.photo}`} alt={s.title} />
+            <figcaption>
+              <span className="journey-count">Step {i + 1} of {journey.length}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </figcaption>
+          </figure>
+        ))}
+        <div className="journey-progress" aria-hidden="true"><span style={{ width: `${((stage + 1) / journey.length) * 100}%` }} /></div>
+        <p className="journey-hint" aria-hidden="true">Keep scrolling ↓</p>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [modal, setModal] = useState(null);
+  const [closing, setClosing] = useState(false);
+
+  const closeModal = () => {
+    setClosing(true);
+    window.setTimeout(() => { setModal(null); setClosing(false); }, 240);
+  };
+  const openPackage = (p) => setModal({
+    eyebrow: p.book === "walk-in" ? "Walk in — no booking" : "Call to book",
+    title: p.name,
+    desc: p.desc,
+    steps: p.steps,
+    note: p.note || null,
+    book: p.book,
+    priceLine: p.small === p.medium && p.medium === p.large
+      ? `${fmt(p.small)} · all sizes`
+      : `Small ${fmt(p.small)} · Medium ${fmt(p.medium)} · Large ${fmt(p.large)}`,
+  });
+  const openMajor = () => setModal({
+    eyebrow: "Call to book",
+    title: "Major Detail — ready for sale",
+    desc: "Want to beat the trade-in blues, or give your ride the birthday you've been promising it? The same treatment we give luxury dealers' new & second-hand vehicles before sale — and a great way to recondition a car you love and want to keep.",
+    steps: null,
+    note: "From $330 for full interior detail — call to discuss your car.",
+    book: "call",
+    priceLine: "From $330",
+  });
+  const openProtection = () => setModal({
+    eyebrow: "Paint protection",
+    title: "New Car Treatment — Gtechniq Crystal Serum",
+    desc: "The world's finest nanotechnology treatments for your vehicle's surfaces — applied by our trained staff, at a price that's truly affordable.",
+    chips: paintProtection.points,
+    steps: paintProtection.includes.map((name) => ({ title: name, text: "" })),
+    note: "Warranty details depend on your vehicle and the treatment chosen — call us and we'll explain the warranty for your car before you book.",
+    book: "call",
+    priceLine: `From $${pricesProposed.paintProtectionFrom}`,
+  });
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -108,6 +230,7 @@ export default function App() {
       </div>
 
       <main>
+        <Journey />
         <section className="wrap reveal" id="how">
           <p className="label">How it works</p>
           <h2>Wash or detail — in two ways</h2>
@@ -146,6 +269,7 @@ export default function App() {
                       <strong>{p.name}</strong>
                       <span className="pkg-desc">{p.desc}</span>
                       <span className={`book-chip ${p.book}`}>{p.book === "walk-in" ? "Walk in — no booking" : "Call to book"}</span>
+                      <button type="button" className="how-btn" onClick={() => openPackage(p)}>See how it works →</button>
                     </td>
                     <td>{fmt(p.small)}</td>
                     <td>{fmt(p.medium)}</td>
@@ -163,6 +287,7 @@ export default function App() {
               <h3>Major Detail — ready for sale</h3>
               <p>Want to beat the trade-in blues, or give your ride the birthday you&apos;ve been promising it? The same treatment we give luxury dealers&apos; new &amp; second-hand vehicles before sale — and a great way to recondition a car you love and want to keep.</p>
               <p className="price-line">From <strong>$330</strong> for full interior detail</p>
+              <button type="button" className="how-btn" onClick={openMajor}>See what&apos;s included</button>
               <a className="call-btn" href={site.phoneHref}>Call to discuss your car</a>
             </article>
             <article className="card">
@@ -203,6 +328,7 @@ export default function App() {
                 <p>Paint protection guards your new car against chemical and ultraviolet damage — and we can also advise on protecting high wear-and-tear areas with Paint Protection Film.</p>
                 <p className="price-line">From <strong>${pricesProposed.paintProtectionFrom}</strong></p>
                 <p className="fineprint">Warranty details depend on your vehicle and the treatment chosen — call us and we&apos;ll explain the warranty for your car before you book.</p>
+                <button type="button" className="how-btn light" onClick={openProtection}>See what&apos;s protected</button>
                 <a className="call-btn" href={site.phoneHref}>Call {site.phoneDisplay}</a>
               </article>
             </div>
@@ -280,6 +406,8 @@ export default function App() {
       </footer>
 
       <a className="sticky-call" href={site.phoneHref}>Call {site.phoneDisplay}</a>
+
+      {modal ? <ServiceModal content={modal} closing={closing} onClose={closeModal} /> : null}
     </div>
   );
 }

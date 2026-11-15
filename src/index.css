@@ -222,6 +222,72 @@ blockquote.quote footer { color: var(--muted); font-size: 14px; font-weight: 600
 .hours td { text-align: right; font-weight: 700; }
 .hours tr:hover th, .hours tr:hover td { background: var(--blue-soft); }
 
+/* How-it-works trigger */
+.how-btn { display: inline-block; margin-top: 10px; background: none; border: none; padding: 0; font: inherit; font-size: 14px; font-weight: 700; color: var(--blue-dark); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s var(--ease), transform 0.2s var(--ease); }
+.how-btn:hover { color: var(--blue); transform: translateX(2px); }
+.how-btn.light { color: #9cc8ff; }
+.how-btn.light:hover { color: #fff; }
+.card .how-btn { display: block; margin-bottom: 4px; }
+
+/* Service popup */
+.modal-backdrop { position: fixed; inset: 0; z-index: 50; background: rgba(11, 11, 12, 0.62); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.25s var(--ease) both; }
+.modal-backdrop.closing { animation: fadeOut 0.24s var(--ease) both; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; } }
+.modal-panel { position: relative; background: #fff; color: var(--ink); width: min(560px, 100%); max-height: calc(100vh - 40px); max-height: calc(100svh - 40px); overflow-y: auto; border-radius: 22px; padding: 30px 28px 26px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); animation: popIn 0.35s var(--ease-out) both; }
+.modal-backdrop.closing .modal-panel { animation: popOut 0.24s var(--ease) both; }
+@keyframes popIn { from { opacity: 0; transform: translateY(26px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes popOut { to { opacity: 0; transform: translateY(16px) scale(0.98); } }
+.modal-close { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: var(--soft); color: var(--ink); font-size: 24px; line-height: 1; cursor: pointer; transition: background 0.2s var(--ease), transform 0.2s var(--ease); }
+.modal-close:hover { background: #e8ecf0; transform: rotate(90deg); }
+.modal-panel h2 { font-size: clamp(22px, 4vw, 28px); padding-right: 44px; }
+.modal-chips { margin-bottom: 6px; }
+.modal-chips li { border-color: rgba(11, 11, 12, 0.2); background: var(--blue-soft); color: var(--blue-dark); }
+.modal-steps { list-style: none; margin-top: 18px; position: relative; }
+.modal-steps::before { content: ""; position: absolute; left: 19px; top: 16px; bottom: 16px; width: 2px; background: var(--line); }
+.mstep { display: flex; gap: 16px; padding: 10px 0; opacity: 0; animation: stepIn 0.5s var(--ease-out) var(--d, 0s) both; }
+@keyframes stepIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.mstep-num { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 900; font-size: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 4px #fff; position: relative; z-index: 1; }
+.mstep strong { display: block; font-size: 16.5px; }
+.mstep span span { display: block; color: var(--muted); font-size: 14.5px; margin-top: 2px; }
+.modal-note { margin-top: 18px; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 15.5px; }
+.modal-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.modal-price { font-size: 18px; font-weight: 800; }
+.modal-foot .call-btn { margin-top: 0; }
+@media (max-width: 560px) {
+  .modal-backdrop { align-items: flex-end; padding: 0; }
+  .modal-panel { border-radius: 22px 22px 0 0; max-height: 88vh; max-height: 88svh; padding: 26px 22px 34px; animation-name: sheetUp; }
+  @keyframes sheetUp { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: none; } }
+  .modal-backdrop.closing .modal-panel { animation-name: popOut; }
+}
+
+/* Scroll journey */
+.journey { position: relative; background: #0b0b0c; }
+.journey-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+.journey-stage { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 0.7s var(--ease); pointer-events: none; }
+.journey-stage.active { opacity: 1; pointer-events: auto; }
+.journey-stage img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 1.4s var(--ease-out); }
+.journey-stage.active img { transform: scale(1); }
+.journey-stage figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: 90px 22px 34px; background: linear-gradient(180deg, transparent, rgba(0,0,0,0.88) 70%); color: #fff; }
+.journey-stage.active figcaption { animation: riseIn 0.7s var(--ease-out) both; }
+.journey-count { font-size: 11px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: #9cc8ff; }
+.journey-stage h3 { font-size: clamp(28px, 5.5vw, 44px); line-height: 1.05; letter-spacing: -0.01em; margin: 8px 0 6px; max-width: 640px; }
+.journey-stage p { font-size: clamp(15px, 2.2vw, 18px); color: rgba(255,255,255,0.88); max-width: 560px; }
+.journey-progress { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: rgba(255,255,255,0.22); z-index: 2; }
+.journey-progress span { display: block; height: 100%; background: var(--blue); transition: width 0.5s var(--ease); }
+.journey-hint { position: absolute; right: 20px; bottom: 18px; z-index: 2; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; animation: cueBounce 1.8s ease-in-out infinite; }
+@media (min-width: 760px) { .journey-stage figcaption { padding: 110px 40px 48px; } }
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop, .modal-panel, .mstep { animation: none; }
+  .mstep { opacity: 1; }
+  .journey { height: auto !important; }
+  .journey-pin { position: static; height: auto; overflow: visible; }
+  .journey-stage { position: static; opacity: 1; pointer-events: auto; }
+  .journey-stage img { height: 320px; transform: none; }
+  .journey-stage figcaption { position: static; background: #0b0b0c; padding: 18px 22px 26px; }
+  .journey-progress, .journey-hint { display: none; }
+}
+
 /* Footer + sticky call */
 .footer { background: #0b0b0c; color: rgba(255,255,255,0.75); padding: 40px 0 110px; font-size: 14.5px; }
 .footer strong { color: #fff; }

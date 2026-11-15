@@ -49,12 +49,43 @@ export const pricesProposed = {
   // (/splash-deep-clean-detail/, $95/$100/$110) — the audit's broken
   // link was the Services page pointing at ?page_id=1759 instead.
   packages: [
-    { name: "Super Wash", desc: "Exterior hand wash — grime, bugs & bird droppings removed, pre-soak, foam shampoo & microfibre mitt wash, wheels & under-body spray, blow dry & hand towel dry. One price does it all.", small: 29.95, medium: 34.95, large: 39.95, book: "walk-in" },
-    { name: "Mini Detail — “The Works”", desc: "Super Wash + interior vacuum (floors, seats, mats, boot), dash, console & steering column wiped, rubber mats washed.", small: 69.95, medium: 75.0, large: 85.0, book: "walk-in" },
-    { name: "Deep Clean Detail", desc: "Interior deep clean — full vacuum, dash/console/seats/door trims wiped, mats washed, door & boot jambs cleaned, air freshener, tyre shine & paint sealant.", small: 95, medium: 100, large: 110, book: "call" },
-    { name: "Superior Mini Detail", desc: "Mini Detail + paint protection sealant (Gtechniq C2, up to 4 months protection).", small: 100, medium: 110, large: 120, book: "call" },
-    { name: "Double Mini Detail", desc: "Superior Mini + Deep Clean interior. Takes 3–4 hours.", small: "250–330", medium: "250–330", large: "250–330", book: "call" },
-    { name: "Full Detail", desc: "Our most complete detail — call us and we will tailor it to your car. (No inclusions published on the live site; do not invent any.)", small: "390–550", medium: "390–550", large: "390–550", book: "call" },
+    { name: "Super Wash", desc: "Exterior hand wash — grime, bugs & bird droppings removed, pre-soak, foam shampoo & microfibre mitt wash, wheels & under-body spray, blow dry & hand towel dry. One price does it all.", small: 29.95, medium: 34.95, large: 39.95, book: "walk-in",
+      steps: [
+        { title: "Pre-soak & rinse", text: "Grime, bugs and bird droppings loosened before we touch the paint." },
+        { title: "Foam shampoo", text: "Thick foam lifts the dirt away from the surface." },
+        { title: "Microfibre mitt wash", text: "Hand washed panel by panel — no brushes, no rollers, no brooms." },
+        { title: "Wheels & under-body", text: "Wheels cleaned and under-body sprayed — no hidden extras." },
+        { title: "Blow dry & towel dry", text: "Blow dried, then hand towel dried for a spot-free finish." },
+      ] },
+    { name: "Mini Detail — “The Works”", desc: "Super Wash + interior vacuum (floors, seats, mats, boot), dash, console & steering column wiped, rubber mats washed.", small: 69.95, medium: 75.0, large: 85.0, book: "walk-in",
+      steps: [
+        { title: "Full Super Wash", text: "Every step of the Super Wash — foam, mitt wash, wheels, dry." },
+        { title: "Interior vacuum", text: "Floors, seats, mats and boot vacuumed." },
+        { title: "Dash & console wiped", text: "Dash, console and steering column wiped clean." },
+        { title: "Rubber mats washed", text: "Mats washed and refitted." },
+      ] },
+    { name: "Deep Clean Detail", desc: "Interior deep clean — full vacuum, dash/console/seats/door trims wiped, mats washed, door & boot jambs cleaned, air freshener, tyre shine & paint sealant.", small: 95, medium: 100, large: 110, book: "call",
+      steps: [
+        { title: "Full vacuum", text: "The whole interior vacuumed, top to bottom." },
+        { title: "Surfaces wiped", text: "Dash, console, seats and door trims wiped." },
+        { title: "Mats washed", text: "Floor mats washed." },
+        { title: "Jambs cleaned", text: "Door and boot jambs cleaned." },
+        { title: "Finishing touches", text: "Air freshener, tyre shine and paint sealant." },
+      ] },
+    { name: "Superior Mini Detail", desc: "Mini Detail + paint protection sealant (Gtechniq C2, up to 4 months protection).", small: 100, medium: 110, large: 120, book: "call",
+      steps: [
+        { title: "Mini Detail — The Works", text: "Super Wash plus the full interior vacuum and wipe-down." },
+        { title: "Gtechniq C2 sealant", text: "Paint protection sealant — up to 4 months protection." },
+      ] },
+    { name: "Double Mini Detail", desc: "Superior Mini + Deep Clean interior. Takes 3–4 hours.", small: "250–330", medium: "250–330", large: "250–330", book: "call",
+      steps: [
+        { title: "Superior Mini Detail", text: "The full wash, interior and C2 paint sealant." },
+        { title: "Deep Clean interior", text: "Full vacuum, trims wiped, jambs cleaned, mats washed." },
+      ],
+      note: "Takes 3–4 hours — please call to book." },
+    { name: "Full Detail", desc: "Our most complete detail — call us and we will tailor it to your car. (No inclusions published on the live site; do not invent any.)", small: "390–550", medium: "390–550", large: "390–550", book: "call",
+      steps: null,
+      note: "Every Full Detail is tailored to your car — call us and we'll plan it with you." },
   ],
   paintProtectionFrom: 995,
   // Machine polishing: homepage says from $380, Major Detail page says
@@ -111,6 +142,21 @@ export const reviews = {
     },
   ],
 };
+
+// The scroll journey — "from dusty to dazzling", told with Rahul's own
+// photos (verified by looking at them 2026-11-15). No foam/rinse action
+// shot exists in the recovered set, so the six stages use the closest
+// matching photos: shop-front arrival, hand wipe, wheel close-up,
+// Bentley interior, Gtechniq application, finished GT3 RS. Captions use
+// published copy only.
+export const journey = [
+  { photo: "Gallery-4.jpg", title: "Just drive in", text: "No booking needed for a Super Wash or Mini Detail — come in during opening hours." },
+  { photo: "Gallery-11.jpg", title: "Washed by hand", text: "Foam shampoo and a microfibre mitt — no brushes, no rollers, no brooms." },
+  { photo: "Gallery-5.jpg", title: "Wheels & trims", text: "Wheels cleaned and under-body sprayed — one price does it all." },
+  { photo: "Gallery-1.jpg", title: "Inside, detailed", text: "Vacuum, dash, console and trims wiped — the interior gets the full treatment." },
+  { photo: "Gallery-18.jpg", title: "Sealed & protected", text: "Gtechniq sealant and Crystal Serum, applied by our trained staff." },
+  { photo: "Gallery-16.jpg", title: "Drive away gleaming", text: "That's the Splash difference." },
+];
 
 // Photos: Rahul's own site photos, recovered from splashcarwash.com.au.
 // Hero must use the two 2048px shots; the rest are 960px (cards/gallery).
