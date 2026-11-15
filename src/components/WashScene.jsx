@@ -327,17 +327,17 @@ export default function WashScene() {
         }
 
         // Two wash arches (pressure wash at -2, rinse at 1.4) + dryer tunnel (3.4).
-        // Posts sit wide of the car (z ±1.7) so they never cross in front of it.
+        // Posts sit wide of the car (z ±2.2) so they never cross in front of it.
         const blueMat = new THREE.MeshStandardMaterial({ color: 0x1c6fd9, roughness: 0.4, metalness: 0.4 });
         const darkMat = new THREE.MeshStandardMaterial({ color: 0x232830, roughness: 0.6, metalness: 0.3 });
         const makeArch = (x, mat, topY) => {
           const g = new THREE.Group();
-          for (const z of [-1.7, 1.7]) {
+          for (const z of [-2.2, 2.2]) {
             const post = new THREE.Mesh(new THREE.BoxGeometry(0.2, topY, 0.2), mat);
             post.position.set(0, topY / 2, z);
             g.add(post);
           }
-          const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.26, 3.6), mat);
+          const beam = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.26, 4.6), mat);
           beam.position.set(0, topY, 0);
           g.add(beam);
           g.position.x = x;
@@ -349,7 +349,7 @@ export default function WashScene() {
         makeArch(3.4, darkMat, 3.4);
         const dryerSlats = new THREE.Group();
         for (let i = 0; i < 5; i++) {
-          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.06, 2.4), darkMat);
+          const slat = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.06, 3.6), darkMat);
           slat.position.set(3.4 + (i - 2) * 0.3, 3.35, 0);
           dryerSlats.add(slat);
         }
@@ -526,8 +526,8 @@ export default function WashScene() {
           doorPivot.rotation.y = p.door * 1.15;
           camera.position.x = p.camX;
           camera.position.z = distBase * (1 - 0.22 * p.close);
-          camera.position.y = 2.9 + Math.sin(t * 0.4) * 0.05;
-          camera.lookAt(p.carX * 0.6, 0.75, 0);
+          camera.position.y = 3.1 + Math.sin(t * 0.4) * 0.05;
+          camera.lookAt(p.carX * 0.6, 0.6, 0);
 
           // Workers, posed and faded by their stage.
           setFigureOpacity(wiper, p.wipe);

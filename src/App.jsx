@@ -258,7 +258,7 @@ export default function App() {
               <button type="button" className="how-btn light" onClick={openProtection}>See what&apos;s protected</button>
               <a className="call-btn" href={site.phoneHref}>Call {site.phoneDisplay}</a>
             </div>
-            <img src={`/photos/${photos.gallery[17]}`} alt="Gtechniq Crystal Serum being applied to a car bonnet" loading="lazy" />
+            <img src={`/photos/${photos.protectionPhoto}`} alt="Gtechniq Crystal Serum being applied to a car bonnet" loading="lazy" />
           </div>
         </Reveal>
 
@@ -277,16 +277,16 @@ export default function App() {
         <Reveal className="wrap" id="reviews">
           <p className="label">Reviews</p>
           <h2>Loved by Adelaide drivers</h2>
-          <p className="stars" aria-label={`Rated ${reviews.rating} out of 5 stars`}><span className="big-stars">★★★★</span><span className="big-stars dim">★</span> <strong>{reviews.rating}★</strong> from {reviews.count}</p>
+          <p className="stars" aria-label={`Rated ${reviews.rating} out of 5 stars`}><span className="big-stars">★★★★</span><span className="big-stars dim">★</span> <strong>{reviews.rating}★</strong> from {reviews.countText}</p>
           <div className="quotes">
             {reviews.quotes.map((q) => (
               <blockquote key={q.text} className="anim">
                 <p>“{q.text}”</p>
-                <cite>— {q.author}</cite>
+                <cite>— {q.source || "Google review"}</cite>
               </blockquote>
             ))}
           </div>
-          <p><a href={reviews.allUrl} target="_blank" rel="noreferrer">Read all reviews →</a></p>
+          <p><a href={reviews.allReviewsUrl} target="_blank" rel="noreferrer">Read all reviews →</a></p>
         </Reveal>
 
         <Reveal className="wrap" id="gift">

@@ -169,6 +169,7 @@ export const photos = {
   heroAlt: "/photos/Slide_4.jpg", // silver supercar close-up, 2048x1637
   logo: "/photos/logo.jpg", // business logo (full: circle mark + "Splash" wordmark), supplied by Rahul 2026-11-15
   logoMark: "/photos/logo-mark.jpg", // circle badge only, cropped from logo.jpg for the header
+  protectionPhoto: "Gallery-18.jpg", // Gtechniq Crystal Serum Ultra boxes held over a Porsche bonnet — the paint-protection section photo (NOT gallery[17]: the gallery only has 14 entries, index 17 is undefined)
   gallery: [
     "Gallery-1.jpg", "Gallery-2.jpg", "Gallery-3.jpg", "Gallery-4.jpg",
     "Gallery-5.jpg", "Gallery-6.jpg", "Gallery-9.jpg", "Gallery-10.jpg",
