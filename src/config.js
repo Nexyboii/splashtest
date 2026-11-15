@@ -143,19 +143,17 @@ export const reviews = {
   ],
 };
 
-// The scroll journey — "from dusty to dazzling", told with Rahul's own
-// photos (verified by looking at them 2026-11-15). No foam/rinse action
-// shot exists in the recovered set, so the six stages use the closest
-// matching photos: shop-front arrival, hand wipe, wheel close-up,
-// Bentley interior, Gtechniq application, finished GT3 RS. Captions use
-// published copy only.
-export const journey = [
-  { photo: "Gallery-4.jpg", title: "Just drive in", text: "No booking needed for a Super Wash or Mini Detail — come in during opening hours." },
-  { photo: "Gallery-11.jpg", title: "Washed by hand", text: "Foam shampoo and a microfibre mitt — no brushes, no rollers, no brooms." },
-  { photo: "Gallery-5.jpg", title: "Wheels & trims", text: "Wheels cleaned and under-body sprayed — one price does it all." },
-  { photo: "Gallery-1.jpg", title: "Inside, detailed", text: "Vacuum, dash, console and trims wiped — the interior gets the full treatment." },
-  { photo: "Gallery-18.jpg", title: "Sealed & protected", text: "Gtechniq sealant and Crystal Serum, applied by our trained staff." },
-  { photo: "Gallery-16.jpg", title: "Drive away gleaming", text: "That's the Splash difference." },
+// The 3D wash hero stages — captions for the scroll-driven animation.
+// The water story is Rahul's own description of his process (2026-11-15):
+// pressure wash with purified water, softened by a Himalayan salt
+// purification process. Verify the exact wording with him if it changes.
+export const washStages = [
+  { title: "Drive in", text: "Your car rolls into the Splash workshop — no booking needed for a wash." },
+  { title: "Pressure wash", text: "Pressure washed with purified water, softened by our Himalayan salt purification process." },
+  { title: "Foam & hand wash", text: "Foam shampoo and a microfibre mitt — no brushes, no rollers, no brooms." },
+  { title: "Pure-water rinse", text: "A pure-water rinse lifts the last of the grime and leaves no spots behind." },
+  { title: "Blow-dry tunnel", text: "Through the blow-dry tunnel — touch-free drying, gentle on paint." },
+  { title: "Gleaming", text: "Drive away gleaming — that's the Splash difference." },
 ];
 
 // Photos: Rahul's own site photos, recovered from splashcarwash.com.au.
