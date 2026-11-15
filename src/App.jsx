@@ -12,10 +12,38 @@ import {
   shopPhotos,
   giftCard,
   navLinks,
+  howItWorks,
+  faqs,
 } from './config.js'
 
 /* ---------- hash routing ---------- */
-const ROUTES = ['home', 'services', 'protection', 'gallery', 'visit']
+const ROUTES = ['home', 'services', 'protection', 'gallery', 'visit', 'faq']
+
+/* ---------- car-size price picker ---------- */
+const SIZES = [
+  { id: 'small', label: 'Small car' },
+  { id: 'medium', label: 'Medium car' },
+  { id: 'large', label: 'Large car' },
+]
+
+function SizePicker({ size, onChange }) {
+  return (
+    <div className="picker" role="group" aria-label="Choose your car size to see its price">
+      <span className="picker-label">My car is a…</span>
+      {SIZES.map((s) => (
+        <button
+          key={s.id}
+          type="button"
+          className={`pill${size === s.id ? ' active' : ''}`}
+          aria-pressed={size === s.id}
+          onClick={() => onChange(s.id)}
+        >
+          {s.label}
+        </button>
+      ))}
+    </div>
+  )
+}
 function routeFromHash() {
   const h = (window.location.hash || '').replace(/^#\/?/, '').split('?')[0]
   return ROUTES.includes(h) ? h : 'home'
@@ -69,11 +97,23 @@ function CallButton({ className, label }) {
   )
 }
 
-function PriceFrom({ item }) {
+function PriceFrom({ item, size }) {
+  if (item.prices && size && item.prices[size] != null) {
+    const label = SIZES.find((s) => s.id === size)
+    return (
+      <span className="price-from">
+        ${item.prices[size]}
+        <small>
+          {label ? label.label : ''} · {item.sub || ''}
+        </small>
+      </span>
+    )
+  }
   if (item.from != null) {
     return (
       <span className="price-from">
-        From ${item.from} <small>· {item.sub || ''}</small>
+        From ${item.from}
+        <small>{item.sub || ''}</small>
       </span>
     )
   }
@@ -87,7 +127,7 @@ function BookingPill({ booking }) {
   return <span className={`booking-pill${needsCall ? ' call' : ''}`}>{booking}</span>
 }
 
-function ServiceCard({ item, kind, onOpen }) {
+function ServiceCard({ item, kind, onOpen, size }) {
   const tagBlue = (item.tag || '').includes('Gtechniq')
   return (
     <article className="card">
@@ -100,7 +140,7 @@ function ServiceCard({ item, kind, onOpen }) {
         <h3>{item.name}</h3>
         <p>{item.blurb}</p>
         <div className="price-row">
-          <PriceFrom item={item} />
+          <PriceFrom item={item} size={size} />
           <BookingPill booking={item.booking} />
         </div>
         <div className="card-actions">
@@ -145,6 +185,7 @@ function ServiceModal({ item, kind, onClose }) {
             ×
           </button>
         </div>
+        <div className="modal-scroll">
         <div className="modal-photo">
           <img src={item.photo} alt={item.photoAlt} />
         </div>
@@ -185,7 +226,10 @@ function ServiceModal({ item, kind, onClose }) {
         <p className="modal-book">
           <strong>{item.booking}.</strong> {item.bookingNote || ''}
         </p>
-        <CallButton label={`Call ${business.phoneDisplay}`} />
+        </div>
+        <div className="modal-foot">
+          <CallButton label={`Call ${business.phoneDisplay}`} />
+        </div>
       </div>
     </div>
   )
@@ -370,8 +414,7 @@ function ReviewsSection() {
 }
 
 /* ---------- home (the hook) ---------- */
-function HomeView({ onOpen, onLightbox }) {
-  const featured = packages.slice(0, 3)
+function HomeView({ onOpen, onLightbox, size, onSizeChange }) {
   const crystal = specialists[0]
   const bubbles = [
     { left: '8%', top: '18%', size: 46, delay: '0s' },
@@ -395,9 +438,10 @@ function HomeView({ onOpen, onLightbox }) {
           />
         ))}
         <div className="hero-inner">
-          <div className="hero-card glass-dark">
-            <img className="hero-logo" src={business.logo} alt="Splash Car Wash logo" />
-            <p className="hero-eyebrow glass-chip">✦ {business.sinceText}</p>
+          <div className="hero-copy">
+            <p className="hero-eyebrow glass-chip">
+              <img className="hero-logo" src={business.logo} alt="" aria-hidden="true" />✦ {business.sinceText}
+            </p>
             <h1>
               {business.heroLine.split('!')[0]}! <span className="accent">Because we Care.</span>
             </h1>
@@ -413,6 +457,7 @@ function HomeView({ onOpen, onLightbox }) {
                 ★ <strong>{business.rating}</strong> · {business.reviewCount} {business.reviewSource}
               </span>
               <span>{business.hoursShort}</span>
+              <span>No booking needed for a wash — just drive in</span>
             </p>
           </div>
         </div>
@@ -420,6 +465,22 @@ function HomeView({ onOpen, onLightbox }) {
           Scroll ↓
         </p>
       </section>
+
+      <div className="price-strip" aria-label="Starting prices">
+        <div className="wrap">
+          <div className="price-tiles">
+            {packages.slice(0, 3).map((p) => (
+              <a className="price-tile" key={p.id} href="#/services">
+                <span className="price-tile-label">{p.name}</span>
+                <span className="price-tile-price">
+                  From ${p.from} <small>· {p.sub || p.booking}</small>
+                </span>
+                <span className="price-tile-note">{p.booking}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <div className="chips">
         <div className="wrap">
@@ -461,26 +522,52 @@ function HomeView({ onOpen, onLightbox }) {
         </div>
       </section>
 
-      <section className="section" style={{ paddingTop: 0 }} aria-label="Featured packages">
+      <section className="section" aria-label="How it works">
+        <div className="wrap">
+          <Reveal>
+            <div className="section-head">
+              <span className="kicker">How it works</span>
+              <h2>Easy as 1, 2, 3</h2>
+            </div>
+          </Reveal>
+          <div className="steps">
+            {howItWorks.map((s) => (
+              <Reveal key={s.n}>
+                <article className="step">
+                  <span className="n">{s.n}</span>
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }} aria-label="All packages">
         <div className="wrap">
           <Reveal>
             <div className="section-head">
               <span className="kicker">Services &amp; prices</span>
               <h2>Start with a wash. Stay for the detail.</h2>
               <p>
-                Washes need no booking — just drive in. Tap any service to see exactly what&rsquo;s included.
+                Every package, every price. Washes need no booking — just drive in. Tap any service to see
+                exactly what&rsquo;s included.
               </p>
             </div>
           </Reveal>
+          <Reveal>
+            <SizePicker size={size} onChange={onSizeChange} />
+          </Reveal>
           <div className="cards three">
-            {featured.map((p) => (
-              <ServiceCard key={p.id} item={p} kind="package" onOpen={onOpen} />
+            {packages.map((p) => (
+              <ServiceCard key={p.id} item={p} kind="package" onOpen={onOpen} size={size} />
             ))}
           </div>
           <Reveal>
             <div style={{ textAlign: 'center', marginTop: 28 }}>
               <a className="btn btn-navy" href="#/services">
-                See all services &amp; prices →
+                Specialist treatments, promos &amp; add-ons →
               </a>
             </div>
           </Reveal>
@@ -585,7 +672,24 @@ function HomeView({ onOpen, onLightbox }) {
 }
 
 /* ---------- services ---------- */
-function ServicesView({ onOpen }) {
+const FILTERS = [
+  { id: 'all', label: 'All services' },
+  { id: 'walkin', label: 'No booking — drive in' },
+  { id: 'book', label: 'Book a time' },
+  { id: 'under100', label: 'Under $100' },
+]
+
+function ServicesView({ onOpen, size, onSizeChange }) {
+  const [filter, setFilter] = useState('all')
+  const match = (item) => {
+    if (filter === 'all') return true
+    if (filter === 'walkin') return item.booking === 'No booking required'
+    if (filter === 'book') return item.booking !== 'No booking required'
+    if (filter === 'under100') return item.from != null && item.from < 100
+    return true
+  }
+  const shownPackages = packages.filter(match)
+  const shownSpecialists = specialists.filter(match)
   return (
     <>
       <div className="wrap page-head">
@@ -593,9 +697,30 @@ function ServicesView({ onOpen }) {
           <span className="kicker">Services &amp; prices</span>
           <h1>Every wash, every detail. One price does it ALL.</h1>
           <p>
-            No hidden surcharges for under-body spray, wheel cleaning or bug removal. Tap any service to see
-            exactly what&rsquo;s included — then call to come in or to book.
+            No hidden surcharges for under-body spray, wheel cleaning or bug removal. Pick your car size,
+            filter by what you need, tap any service to see exactly what&rsquo;s included — then call to come
+            in or to book.
           </p>
+        </Reveal>
+      </div>
+
+      <div className="wrap">
+        <Reveal>
+          <SizePicker size={size} onChange={onSizeChange} />
+          <div className="picker" role="group" aria-label="Filter services" style={{ marginTop: 10 }}>
+            <span className="picker-label">Show me…</span>
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`pill${filter === f.id ? ' active' : ''}`}
+                aria-pressed={filter === f.id}
+                onClick={() => setFilter(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </Reveal>
       </div>
 
@@ -607,11 +732,15 @@ function ServicesView({ onOpen }) {
               <h2>Main packages</h2>
             </div>
           </Reveal>
-          <div className="cards three">
-            {packages.map((p) => (
-              <ServiceCard key={p.id} item={p} kind="package" onOpen={onOpen} />
-            ))}
-          </div>
+          {shownPackages.length ? (
+            <div className="cards three">
+              {shownPackages.map((p) => (
+                <ServiceCard key={p.id} item={p} kind="package" onOpen={onOpen} size={size} />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: 'var(--muted)' }}>No main packages match that filter — try “All services”.</p>
+          )}
         </div>
       </section>
 
@@ -624,11 +753,15 @@ function ServicesView({ onOpen }) {
               <p>Call to book a time — these are done by appointment.</p>
             </div>
           </Reveal>
-          <div className="cards three">
-            {specialists.map((s) => (
-              <ServiceCard key={s.id} item={s} kind="specialist" onOpen={onOpen} />
-            ))}
-          </div>
+          {shownSpecialists.length ? (
+            <div className="cards three">
+              {shownSpecialists.map((s) => (
+                <ServiceCard key={s.id} item={s} kind="specialist" onOpen={onOpen} size={size} />
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: 'var(--muted)' }}>No specialist treatments match that filter — try “All services”.</p>
+          )}
         </div>
       </section>
 
@@ -927,11 +1060,46 @@ function VisitView({ onLightbox }) {
   )
 }
 
+/* ---------- faq ---------- */
+function FaqView() {
+  return (
+    <>
+      <div className="wrap page-head">
+        <Reveal>
+          <span className="kicker">Questions, answered</span>
+          <h1>Frequently asked questions</h1>
+          <p>Anything else? Call {business.phoneDisplay} — we&rsquo;re happy to help.</p>
+        </Reveal>
+      </div>
+      <section className="section" style={{ paddingTop: 24 }} aria-label="Frequently asked questions">
+        <div className="wrap">
+          <div className="faq-list">
+            {faqs.map((f) => (
+              <Reveal key={f.q}>
+                <details className="faq-item">
+                  <summary>{f.q}</summary>
+                  <p>{f.a}</p>
+                </details>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <div style={{ textAlign: 'center', marginTop: 28 }}>
+              <CallButton label="Still unsure? Call us" />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  )
+}
+
 /* ---------- app root ---------- */
 export default function App() {
   const [route, setRoute] = useState(() => routeFromHash())
   const [modal, setModal] = useState(null)
   const [lightbox, setLightbox] = useState(null)
+  const [size, setSize] = useState('small')
 
   useEffect(() => {
     const onHash = () => {
@@ -968,21 +1136,14 @@ export default function App() {
     <>
       <Nav route={route} />
       <main key={route} className="view">
-        {route === 'home' && <HomeView onOpen={openService} onLightbox={openLightbox} />}
-        {route === 'services' && <ServicesView onOpen={openService} />}
+        {route === 'home' && <HomeView onOpen={openService} onLightbox={openLightbox} size={size} onSizeChange={setSize} />}
+        {route === 'services' && <ServicesView onOpen={openService} size={size} onSizeChange={setSize} />}
         {route === 'protection' && <ProtectionView onOpen={openService} />}
         {route === 'gallery' && <GalleryView onLightbox={openLightbox} />}
         {route === 'visit' && <VisitView onLightbox={openLightbox} />}
+        {route === 'faq' && <FaqView />}
       </main>
       <Footer />
-      <div className="callbar" role="navigation" aria-label="Call Splash">
-        <a className="btn btn-call" href={business.phoneHref}>
-          <span className="phone-ic" aria-hidden="true">☎</span> Call {business.phoneDisplay}
-        </a>
-        <a className="btn btn-glass" href="#/services">
-          Services
-        </a>
-      </div>
       {modal ? <ServiceModal item={modal.item} kind={modal.kind} onClose={() => setModal(null)} /> : null}
       {lightbox ? (
         <Lightbox

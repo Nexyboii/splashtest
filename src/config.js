@@ -380,4 +380,52 @@ export const navLinks = [
   { id: "protection", label: "Paint Protection" },
   { id: "gallery", label: "Gallery" },
   { id: "visit", label: "Visit Us" },
+  { id: "faq", label: "FAQ" },
+];
+
+// How a visit works — from the DNA only (drive in, hand wash, coffee).
+export const howItWorks = [
+  {
+    n: "1",
+    title: "Drive in",
+    text: "No booking needed for a Superwash or The Works — just drive in, 7 days a week.",
+  },
+  {
+    n: "2",
+    title: "We hand wash",
+    text: "Your car is washed by hand in 100% spring water and dried with clean microterry towels.",
+  },
+  {
+    n: "3",
+    title: "Relax, coffee in hand",
+    text: "Relax with a coffee while our staff pamper your vehicle — then drive away gleaming.",
+  },
+];
+
+// FAQ — every answer comes from the DNA / this config only. Nothing invented.
+export const faqs = [
+  {
+    q: "Do I need to book?",
+    a: "No booking is needed for the Splash SUPERWASH ($28–$35) or The Works Mini Detail ($65–$75) — just drive in. Deep Clean, Superior Mini and Double Mini details are best booked, and Paint Protection, Machine Polishing and the other specialist treatments are by appointment. Call 08 8379 7700.",
+  },
+  {
+    q: "How much is a wash?",
+    a: "The Splash SUPERWASH exterior hand wash is $28 for a small car, $31 medium, $35 large — one price does it ALL, with no hidden surcharges for under-body spray, wheel cleaning or bug removal. Use the car-size picker on the Services page to see your car's price.",
+  },
+  {
+    q: "Where are you, and when are you open?",
+    a: "395 Glen Osmond Road, Glen Osmond SA 5064. Monday to Saturday 8:00am–5:00pm, Sunday 9:00am–4:00pm — open 7 days.",
+  },
+  {
+    q: "What is Gtechniq Crystal Serum, and how much is it?",
+    a: "Our flagship ceramic paint protection coating for new cars — a cost-saving alternative to dealership protection. Starting from $995, by appointment. Call 08 8379 7700 for warranty details.",
+  },
+  {
+    q: "What products do you use?",
+    a: "Named commercial-grade products: Gtechniq Crystal Serum, C2 Liquid Crystal and L1 Nanotech, AutoGlym Autogloss Rinse and Aqua Wax — and your car is washed in 100% spring water.",
+  },
+  {
+    q: "Do you sell gift cards?",
+    a: "Yes — a Splash Gift Card is the perfect gift to make anybody's car look like brand new. Call 08 8379 7700 to arrange one.",
+  },
 ];
