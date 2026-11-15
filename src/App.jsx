@@ -1,11 +1,18 @@
 // Splash Car Wash & Detailing — rebuild preview (call-only booking).
 // Content rules enforced in src/config.js: verified facts + proposed prices
 // only; no invented inclusions, reviews, warranty years, or booking links.
-import React, { useEffect } from "react";
+// Motion pass 2026-11-15: logo, floating-bubble hero, staggered entrances,
+// marquee, hover-lift cards, shine-sweep call buttons.
+import React, { useEffect, useState } from "react";
 import { site, booking, pricesProposed, paintProtection, reviews, photos } from "./config.js";
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Splash+Car+Wash+%26+Detailing%2C+395+Glen+Osmond+Rd%2C+Glen+Osmond+SA+5064";
+
+const MARQUEE_ITEMS = [
+  "Hand Wash", "Ceramic Coating", "Paint Protection", "Full Detailing",
+  "Machine Polishing", "Interior Deep Clean", "Mini Detail", "Leather Care",
+];
 
 function fmt(v) {
   return typeof v === "number" ? `$${v.toFixed(2)}` : `$${v}`;
@@ -15,7 +22,23 @@ function Stars({ n }) {
   return <span className="stars" aria-label={`${n} out of 5 stars`}>{"★".repeat(n)}{"☆".repeat(5 - n)}</span>;
 }
 
+function Bubbles() {
+  return (
+    <div className="bubbles" aria-hidden="true">
+      {Array.from({ length: 10 }, (_, i) => <span key={i} className={`bubble b${i + 1}`} />)}
+    </div>
+  );
+}
+
 export default function App() {
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
     const io = new IntersectionObserver(
@@ -28,9 +51,12 @@ export default function App() {
 
   return (
     <div className="splash">
-      <header className="topbar">
+      <header className={`topbar${scrolled ? " scrolled" : ""}`}>
         <div className="wrap topbar-inner">
-          <a className="brand" href="#top">SPLASH<span> · CAR WASH &amp; DETAILING</span></a>
+          <a className="brand" href="#top">
+            <span className="brand-mark"><img src={photos.logoMark} alt="" /></span>
+            <span className="brand-text">SPLASH<span>CAR WASH &amp; DETAILING</span></span>
+          </a>
           <nav className="nav" aria-label="Sections">
             <a href="#prices">Prices</a>
             <a href="#protection">Paint Protection</a>
@@ -45,26 +71,41 @@ export default function App() {
       <section className="hero" id="top">
         <img className="hero-img" src={photos.hero} alt="Red Porsche detailed in the Splash studio" fetchpriority="high" />
         <div className="hero-shade" />
+        <Bubbles />
         <div className="wrap hero-copy">
-          <p className="eyebrow">Hand car wash · Glen Osmond, Adelaide · Since 2001</p>
-          <h1>Your car, pampered by hand.</h1>
-          <p className="hero-sub">
+          <div className="hero-badge anim" style={{ "--d": "0s" }}>
+            <img src={photos.logo} alt="Splash Car Wash & Detailing logo" />
+          </div>
+          <p className="eyebrow anim" style={{ "--d": "0.1s" }}>Hand car wash · Glen Osmond, Adelaide · Since 2001</p>
+          <h1 className="anim" style={{ "--d": "0.22s" }}>Your car, <em>pampered</em> by hand.</h1>
+          <p className="hero-sub anim" style={{ "--d": "0.34s" }}>
             Full-service hand car washing, paint protection &amp; detailing.
             From supercars to daily drivers — we treat every car with the
             utmost care &amp; attention.
           </p>
-          <p className="promise">{site.promise}</p>
-          <div className="hero-ctas">
+          <p className="promise anim" style={{ "--d": "0.44s" }}>{site.promise}</p>
+          <div className="hero-ctas anim" style={{ "--d": "0.54s" }}>
             <a className="call-btn big" href={site.phoneHref}>Call {site.phoneDisplay}</a>
             <a className="ghost-btn big" href="#prices">See prices</a>
           </div>
-          <p className="trust">
+          <p className="trust anim" style={{ "--d": "0.66s" }}>
             <span>★ {reviews.rating} on Google · {reviews.countText}</span>
             <span>25 years serving Adelaide</span>
             <span>Open 7 days</span>
           </p>
         </div>
+        <a className="scroll-cue" href="#how" aria-label="Scroll down to see how it works">
+          <span>Scroll</span><i aria-hidden="true">↓</i>
+        </a>
       </section>
+
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          {[0, 1].map((n) => (
+            <span key={n}>{MARQUEE_ITEMS.map((it) => `${it}  ✦  `).join("")}</span>
+          ))}
+        </div>
+      </div>
 
       <main>
         <section className="wrap reveal" id="how">
@@ -101,7 +142,11 @@ export default function App() {
               <tbody>
                 {pricesProposed.packages.map((p) => (
                   <tr key={p.name}>
-                    <td><strong>{p.name}</strong><span className="pkg-desc">{p.desc}</span></td>
+                    <td>
+                      <strong>{p.name}</strong>
+                      <span className="pkg-desc">{p.desc}</span>
+                      <span className={`book-chip ${p.book}`}>{p.book === "walk-in" ? "Walk in — no booking" : "Call to book"}</span>
+                    </td>
                     <td>{fmt(p.small)}</td>
                     <td>{fmt(p.medium)}</td>
                     <td>{fmt(p.large)}</td>
@@ -169,7 +214,9 @@ export default function App() {
           <h2>From supercars to daily drivers</h2>
           <div className="gallery">
             {photos.gallery.map((g, i) => (
-              <img key={g} src={`/photos/${g}`} alt={`Splash Car Wash detailing work ${i + 1}`} loading="lazy" />
+              <figure className="g-item" key={g}>
+                <img src={`/photos/${g}`} alt={`Splash Car Wash detailing work ${i + 1}`} loading="lazy" />
+              </figure>
             ))}
           </div>
         </section>
@@ -220,9 +267,15 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <div className="wrap">
-          <p><strong>SPLASH CAR WASH &amp; DETAILING</strong> · Serving Adelaide&apos;s cars since 2001</p>
-          <p>{site.address} · <a href={site.phoneHref}>{site.phoneDisplay}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <div className="wrap footer-inner">
+          <div className="footer-brand">
+            <img src={photos.logo} alt="Splash Car Wash & Detailing logo" />
+          </div>
+          <div>
+            <p><strong>SPLASH CAR WASH &amp; DETAILING</strong> · Serving Adelaide&apos;s cars since 2001</p>
+            <p>{site.address} · <a href={site.phoneHref}>{site.phoneDisplay}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+            <p className="footer-nav"><a href="#prices">Prices</a> · <a href="#protection">Paint Protection</a> · <a href="#gallery">Gallery</a> · <a href="#reviews">Reviews</a> · <a href="#visit">Visit</a></p>
+          </div>
         </div>
       </footer>
 
