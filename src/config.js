@@ -157,7 +157,7 @@ export const packages = [
     blurb:
       "Mini Detail Plus, upgraded with Gtechniq C2 paint protection sealant — or a heavy-duty treatment for a very dirty car.",
     includes: [
-      "Everything in the Mini Detail",
+      "Everything in The Works Mini Detail",
       "Gtechniq C2 Liquid Crystal paint protection sealant",
       "4 months of paint protection",
       "Suits heavily soiled cars",
@@ -217,11 +217,10 @@ export const specialists = [
     photo: "/photos/hero-alt.jpg",
     photoAlt: "Ceramic-coated car in the Splash studio",
     blurb:
-      "Gtechniq Crystal Serum ceramic paint protection for new cars — the cost-saving dealership alternative.",
+      "Gtechniq Crystal Serum ceramic paint protection for new cars — the cost-saving dealership alternative. Call for warranty details.",
     points: [
       "Gtechniq Crystal Serum ceramic coating",
       "New-car treatment & paint protection",
-      "Call for warranty details",
     ],
   },
   {
@@ -363,9 +362,33 @@ export const gallery = [
 ];
 
 export const shopPhotos = [
-  { src: "/photos/street-3399.jpg", alt: "Splash Car Wash & Detailing shopfront on Glen Osmond Road", caption: "The shopfront — 395 Glen Osmond Rd (Street View, July 2025)" },
-  { src: "/photos/street-3398.jpg", alt: "Splash wash bays with a white Audi out front", caption: "The wash bays (Street View, July 2025)" },
-  { src: "/photos/street-3396.jpg", alt: "Staff washing a car in the Splash wash bay", caption: "At work in the bays (Street View, October 2025)" },
+  { src: "/photos/street-3399.jpg", alt: "Splash Car Wash & Detailing shopfront on Glen Osmond Road", caption: "The shopfront — 395 Glen Osmond Rd" },
+  { src: "/photos/street-3398.jpg", alt: "Splash wash bays with a white Audi out front", caption: "The wash bays" },
+  { src: "/photos/street-3396.jpg", alt: "Staff washing a car in the Splash wash bay", caption: "At work in the bays" },
+];
+
+// Car-size examples — the large line mirrors the A La Carte surcharge wording.
+export const sizeExamples = {
+  small: "Small hatchbacks & sedans",
+  medium: "Family sedans & small SUVs",
+  large: "4WDs, utes, people movers & 7-seaters",
+};
+
+// Package comparison — each ✓ is derived only from that package's published
+// steps/includes, or from a package it builds on ("Everything in …").
+// "no" means not listed for that package, not that it can't be added.
+export const compareFeatures = [
+  { label: "Exterior hand wash", values: { superwash: "yes", works: "yes", deepclean: "yes", superior: "yes", double: "yes", major: "no" } },
+  { label: "Interior vacuum", values: { superwash: "no", works: "yes", deepclean: "yes", superior: "yes", double: "yes", major: "yes" } },
+  { label: "Dash, console & trims wiped", values: { superwash: "no", works: "yes", deepclean: "yes", superior: "yes", double: "yes", major: "yes" } },
+  { label: "Tyre shine", values: { superwash: "no", works: "yes", deepclean: "yes", superior: "yes", double: "yes", major: "no" } },
+  { label: "Air freshener", values: { superwash: "no", works: "yes", deepclean: "yes", superior: "yes", double: "no", major: "no" } },
+  { label: "Paint sealant", values: { superwash: "no", works: "no", deepclean: "yes", superior: "no", double: "yes", major: "no" } },
+  { label: "Gtechniq C2 sealant — 4 months' protection", values: { superwash: "no", works: "no", deepclean: "no", superior: "yes", double: "no", major: "no" } },
+  { label: "Suits heavily soiled cars", values: { superwash: "no", works: "no", deepclean: "no", superior: "yes", double: "no", major: "no" } },
+  { label: "Extended interior detail (up to 3–4 hours)", values: { superwash: "no", works: "no", deepclean: "no", superior: "no", double: "yes", major: "no" } },
+  { label: "Pre-sale reconditioning", values: { superwash: "no", works: "no", deepclean: "no", superior: "no", double: "no", major: "yes" } },
+  { label: "Full A La Carte menu available", values: { superwash: "no", works: "no", deepclean: "no", superior: "no", double: "no", major: "yes" } },
 ];
 
 export const giftCard = {

@@ -14,6 +14,8 @@ import {
   navLinks,
   howItWorks,
   faqs,
+  sizeExamples,
+  compareFeatures,
 } from './config.js'
 
 /* ---------- hash routing ---------- */
@@ -28,19 +30,86 @@ const SIZES = [
 
 function SizePicker({ size, onChange }) {
   return (
-    <div className="picker" role="group" aria-label="Choose your car size to see its price">
-      <span className="picker-label">My car is a…</span>
-      {SIZES.map((s) => (
-        <button
-          key={s.id}
-          type="button"
-          className={`pill${size === s.id ? ' active' : ''}`}
-          aria-pressed={size === s.id}
-          onClick={() => onChange(s.id)}
-        >
-          {s.label}
-        </button>
-      ))}
+    <>
+      <div className="picker" role="group" aria-label="Choose your car size to see its price">
+        <span className="picker-label">My car is a…</span>
+        {SIZES.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            className={`pill${size === s.id ? ' active' : ''}`}
+            aria-pressed={size === s.id}
+            onClick={() => onChange(s.id)}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <p className="picker-hint">
+        {SIZES.find((s) => s.id === size).label}: {sizeExamples[size]}. Not sure? Call us — we&rsquo;ll
+        tell you over the phone.
+      </p>
+    </>
+  )
+}
+
+/* ---------- package comparison table (published data only) ---------- */
+const SHORT_NAMES = {
+  superwash: 'SUPERWASH',
+  works: 'The Works',
+  deepclean: 'Deep Clean',
+  superior: 'Superior',
+  double: 'Double Mini',
+  major: 'Major',
+}
+
+function comparePrice(p) {
+  if (p.prices) return `$${p.prices.small}`
+  if (p.priceNote) return 'From $330'
+  return 'Call for price'
+}
+
+function CompareTable() {
+  return (
+    <div className="table-scroll">
+      <table className="compare">
+        <thead>
+          <tr>
+            <th scope="col">Compare packages</th>
+            {packages.map((p) => (
+              <th key={p.id} scope="col">{SHORT_NAMES[p.id] || p.name}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Price (small car)</th>
+            {packages.map((p) => (
+              <td key={p.id} className="c-price">{comparePrice(p)}</td>
+            ))}
+          </tr>
+          <tr>
+            <th scope="row">Booking</th>
+            {packages.map((p) => (
+              <td key={p.id}>{p.booking === 'No booking required' ? 'Just drive in' : 'Book a time'}</td>
+            ))}
+          </tr>
+          {compareFeatures.map((f) => (
+            <tr key={f.label}>
+              <th scope="row">{f.label}</th>
+              {packages.map((p) => {
+                const v = f.values[p.id]
+                return v === 'yes' ? (
+                  <td key={p.id} className="yes">✓</td>
+                ) : (
+                  <td key={p.id} className="no">—</td>
+                )
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="table-note">✓ = included. — = not listed for that package (ask us — most extras can be added).</p>
     </div>
   )
 }
@@ -416,27 +485,12 @@ function ReviewsSection() {
 /* ---------- home (the hook) ---------- */
 function HomeView({ onOpen, onLightbox, size, onSizeChange }) {
   const crystal = specialists[0]
-  const bubbles = [
-    { left: '8%', top: '18%', size: 46, delay: '0s' },
-    { left: '86%', top: '26%', size: 30, delay: '1.2s' },
-    { left: '14%', top: '68%', size: 26, delay: '0.6s' },
-    { left: '78%', top: '62%', size: 56, delay: '2s' },
-    { left: '48%', top: '10%', size: 20, delay: '1.6s' },
-    { left: '92%', top: '48%', size: 18, delay: '0.3s' },
-  ]
+  const wash = packages[0]
   return (
     <>
       <section className="hero" aria-label="Splash Car Wash & Detailing">
         <img className="hero-bg" src={business.heroPhoto} alt="Red classic Porsche 911 in the Splash studio with Gtechniq signage" fetchpriority="high" />
         <div className="hero-shade" aria-hidden="true" />
-        {bubbles.map((b, i) => (
-          <span
-            key={i}
-            className="bubble"
-            aria-hidden="true"
-            style={{ left: b.left, top: b.top, width: b.size, height: b.size, animationDelay: b.delay }}
-          />
-        ))}
         <div className="hero-inner">
           <div className="hero-copy">
             <p className="hero-eyebrow glass-chip">
@@ -446,6 +500,12 @@ function HomeView({ onOpen, onLightbox, size, onSizeChange }) {
               {business.heroLine.split('!')[0]}! <span className="accent">Because we Care.</span>
             </h1>
             <p className="hero-sub">{business.heroSub}</p>
+            <p className="hero-facts" aria-label="Quick facts">
+              <span>Hand wash from ${wash.from} · Medium car ${wash.prices.medium}</span>
+              <span>No booking — just drive in</span>
+              <span>{business.addressShort}</span>
+              <span>Open Sundays 9am–4pm</span>
+            </p>
             <div className="hero-ctas">
               <CallButton label={`Call ${business.phoneDisplay}`} />
               <a className="btn btn-glass" href="#/services">
@@ -698,8 +758,8 @@ function ServicesView({ onOpen, size, onSizeChange }) {
           <h1>Every wash, every detail. One price does it ALL.</h1>
           <p>
             No hidden surcharges for under-body spray, wheel cleaning or bug removal. Pick your car size,
-            filter by what you need, tap any service to see exactly what&rsquo;s included — then call to come
-            in or to book.
+            filter by what you need, compare the packages side by side, tap any service to see exactly
+            what&rsquo;s included — then call to come in or to book.
           </p>
         </Reveal>
       </div>
@@ -741,6 +801,21 @@ function ServicesView({ onOpen, size, onSizeChange }) {
           ) : (
             <p style={{ color: 'var(--muted)' }}>No main packages match that filter — try “All services”.</p>
           )}
+        </div>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }} aria-label="Compare packages">
+        <div className="wrap">
+          <Reveal>
+            <div className="section-head">
+              <span className="kicker">At a glance</span>
+              <h2>Compare the packages</h2>
+              <p>Every package, side by side — so you can see which one fits your car.</p>
+            </div>
+          </Reveal>
+          <Reveal>
+            <CompareTable />
+          </Reveal>
         </div>
       </section>
 
